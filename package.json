@@ -24,6 +24,6 @@
   "dependencies": {
     "ejs": "^2.4.2",
     "express": "^4.14.0",
-    "instagram-node": "^0.5.8"
+    "flickr-sdk": "^1.2.2"
   }
 }

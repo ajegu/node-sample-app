@@ -1,6 +1,6 @@
 var express = require('express');
 var app = express();
-var ig = require('instagram-node').instagram();
+var Flickr = require('flickr-sdk');
 
 
 // static route
@@ -9,20 +9,28 @@ app.use(express.static(__dirname + '/public'));
 // set the view engine
 app.set('view engine', 'ejs');
 
-// configure the instagram app with client id
-ig.use({
-    client_id: '',
-    client_secret: ''
+// configure the flickr app with client id
+var flickr = new Flickr({
+  'apiKey': '74e11d52ebe78ab2be78d45a338faf2c',
+  'apiSecret': '3b47ed17473221de'
 });
 
 // set the routes
 app.get('/', function(req, res) {
-    // use the instagram package to get popular media
-    ig.media_search(48.4335645654, 2.345645645, function(err, medias, remaining, limit) {
-        // render the home page and pass in the popular images        
-        res.render('pages/index', {
-            grams: medias
-        });
+    // use the flickr package to get popular media
+    flickr
+    .request()
+    .media()
+    .search('popular')
+    .get({
+      media: 'photos',
+      page: 1,
+      per_page: 20
+    })
+    .then(function (response) {
+      res.render('pages/index', {
+        photos: response.body.photos.photo
+      });
     });
 });
 
